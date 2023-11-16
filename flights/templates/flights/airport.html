@@ -1,0 +1,16 @@
+{% extends "flights/layout.html" %}
+
+{% block body %}
+
+  <div class="container">
+    <h1 class="main-title">{{ airport.code }} Airport</h1>
+  </div>
+  <a href="{% url 'flights:index' %}">Back to Index</a>
+  <br><br>
+  <section class="airport-info">
+    <h3>Airport Details</h3>
+    <span>Code: {{ airport.code }}</span>
+    <span>City: {{ airport.city }}</span>
+  </section>
+
+{% endblock %}

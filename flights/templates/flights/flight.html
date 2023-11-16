@@ -1,0 +1,76 @@
+{% extends "flights/layout.html" %}
+
+{% block body %}
+
+  <div class="container">
+    <h1 class="main-title">Flight {{ flight.id }}</h1>
+    <a href="{% url 'flights:index' %}">Back to Index</a>
+    <br><br>
+    <section class="flight-info">
+      <h3>Flight Details</h3>
+      <p class="flight-info-item">Origin: {{ flight.origin }}</p>
+      <p class="flight-info-item">Destination: {{ flight.destination }}</p>
+      <p class="flight-info-item">Duration: {{ flight.duration }}</p>
+      <form method="post" action="{% url 'flights:edit_flight' flight.id %}">
+        {% csrf_token %}
+        <!-- Your other flight details here -->
+        <button type="submit">Edit</button>
+      </form>
+    </section>
+    <br>
+    <section class="passengers">
+      <h3>Passengers</h3>
+      <table>
+        <theader>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Citizenship</th>
+            <th>Passport Number</th>S
+            <th>Action</th>
+          <tr>
+        </theader>
+        <tbody>
+          {% for passenger in passengers %}
+            <tr>
+              <td>{{ passenger.first_name }}</td>
+              <td>{{ passenger.last_name }}</td>
+              <td>{{ passenger.age }}</td>
+              <td>{{ passenger.gender }}</td>
+              <td>{{ passenger.citizenship }}</td>
+              <td>{{ passenger.passport_id }}</td>
+              <td>
+                <form action="{% url 'flights:remove_passenger' flight.id passenger.id %}" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="passenger_id" value="{{ passenger.id }}">
+                  <input type="hidden" name="_method" value="DELETE"> {# Add this hidden field to simulate a DELETE request #}
+                  <button type="submit">Remove</button>
+                </form>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="6">No passengers.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+    <br>
+    <section>
+      <h3>Add a Passenger</h3>
+      <form action="{% url 'flights:book' flight.id %}" method="post">
+        {% csrf_token %}
+        <select name="passenger">
+          {% for passenger in non_passengers %}
+            <option value="{{ passenger.id }}">{{ passenger.first_name }} {{ passenger.last_name }}</option>
+          {% endfor %}
+        </select>
+        <input type="submit">
+      </form>
+    </section>
+  </div>
+
+{% endblock %}
